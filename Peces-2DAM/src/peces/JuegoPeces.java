@@ -1,6 +1,8 @@
 package peces;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JButton;
@@ -10,8 +12,14 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 public class JuegoPeces {
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> abrirVentana());
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                abrirVentana();
+            }
+        });
     }
 
     private static void abrirVentana() {
@@ -19,7 +27,13 @@ public class JuegoPeces {
                 + "Cada punto dorado suma 1. Comer un pez verde suma su tamaño.\n"
                 + "Si chocas con un pez igual o mayor, pierdes.\n"
                 + "Ganas al llegar a 50.";
-        JOptionPane.showMessageDialog(null, reglas, "Bienvenida a Océano", JOptionPane.INFORMATION_MESSAGE);
+
+        JOptionPane.showMessageDialog(
+                null,
+                reglas,
+                "Bienvenida a Océano",
+                JOptionPane.INFORMATION_MESSAGE
+        );
 
         Sonidos sonidos = new Sonidos();
         Tablero tablero = new Tablero(sonidos);
@@ -27,9 +41,12 @@ public class JuegoPeces {
         HiloComida hiloComida = new HiloComida(tablero);
 
         JButton reiniciar = new JButton("Volver a jugar");
-        reiniciar.addActionListener(e -> {
-            tablero.iniciar();
-            tablero.requestFocusInWindow();
+        reiniciar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evento) {
+                tablero.iniciar();
+                tablero.requestFocusInWindow();
+            }
         });
 
         JPanel pie = new JPanel();
@@ -42,6 +59,7 @@ public class JuegoPeces {
         ventana.setResizable(false);
         ventana.pack();
         ventana.setLocationRelativeTo(null);
+
         ventana.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent evento) {
